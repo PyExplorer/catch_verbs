@@ -14,7 +14,7 @@ def flat(_list):
     return res
 
 
-def is_verb(word):
+def check_is_verb_with_ntlk(word):
     if not word:
         return False
     pos_info = pos_tag([word])
@@ -60,36 +60,13 @@ def get_trees(path, with_filenames=False, with_file_content=False):
     return trees
 
 
-def get_all_names(tree):
-    all_names = []
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Name):
-            continue
-        all_names.append(node.id)
-
-    return all_names
-
-
 def get_verbs_from_function_name(function_name):
     res = []
     for word in function_name.split('_'):
-        if not is_verb(word):
+        if not check_is_verb_with_ntlk(word):
             continue
         res.append(word)
     return res
-
-
-def get_all_names_in_path(path):
-    trees = get_trees(path)
-    function_with_names = [f for f in flat([get_all_names(t) for t in trees]) if
-                      not (f.startswith('__') and f.endswith('__'))]
-
-    def split_snake_case_name_to_words(name):
-        return [n for n in name.split('_') if n]
-
-    return flat(
-        [split_snake_case_name_to_words(function_name) for function_name in
-         function_with_names])
 
 
 def get_functions_names_from_trees(trees):
@@ -118,13 +95,6 @@ def get_top_verbs_in_path(path, top_size=10):
     return collections.Counter(verbs).most_common(top_size)
 
 
-def get_top_functions_names_in_path(path, top_size=10):
-    trees = get_trees(path)
-    functions_names = get_functions_names_from_trees(trees)
-
-    return collections.Counter(functions_names).most_common(top_size)
-
-
 def main():
     projects = [
         'django',
@@ -135,22 +105,14 @@ def main():
         'sqlalchemy',
     ]
     words = []
-    names = []
     for project in projects:
         path = os_path.join('.', project)
         words.extend(get_top_verbs_in_path(path))
-        names.extend(get_all_names_in_path(path))
 
     print(
         'total %s words, %s unique' % (
             len(words),
             len(set(words))
-        )
-    )
-    print(
-        'total %s names, %s unique' % (
-            len(names),
-            len(set(names))
         )
     )
 
