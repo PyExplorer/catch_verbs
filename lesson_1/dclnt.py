@@ -21,16 +21,28 @@ def check_is_verb_with_ntlk(word):
     return pos_info[0][1] == 'VB'
 
 
-def get_trees(path, with_filenames=False, with_file_content=False):
+def is_function_name_valid(func):
+    return not (func.startswith('__') and func.endswith('__'))
+
+
+def get_filenames_with_ext_in_path(path, ext='.py', max_size=100):
     filenames = []
-    trees = []
     for dirname, dirs, files in os_walk(path, topdown=True):
         for file in files:
-            if file.endswith('.py'):
-                filenames.append(os_path.join(dirname, file))
-                if len(filenames) == 100:
-                    break
-    print('total %s files' % (len(filenames), ))
+            if not file.endswith(ext):
+                continue
+            filenames.append(os_path.join(dirname, file))
+            if len(filenames) == max_size:
+                break
+
+    print('total {} files'.format(len(filenames)))
+    return filenames
+
+
+def get_trees(path, with_filenames=False, with_file_content=False):
+    filenames = get_filenames_with_ext_in_path(path)
+
+    trees = []
     for filename in filenames:
         with open(filename, 'r', encoding='utf-8') as opened_file:
             main_file_content = opened_file.read()
@@ -56,43 +68,63 @@ def get_trees(path, with_filenames=False, with_file_content=False):
 
         trees.append((filename, tree))
 
-    print('trees generated')
+    print('{} trees generated'.format(len(trees)))
     return trees
 
 
 def get_verbs_from_function_name(function_name):
-    res = []
+    verbs = []
     for word in function_name.split('_'):
         if not check_is_verb_with_ntlk(word):
             continue
-        res.append(word)
-    return res
+        verbs.append(word)
+    return verbs
 
 
-def get_functions_names_from_trees(trees):
+def get_functions_from_trees(trees):
     functions = []
     for tree in trees:
         for node in ast.walk(tree):
             if not isinstance(node, ast.FunctionDef):
                 continue
             functions.append(node.name.lower())
+    return functions
 
+
+def get_functions_names_from_functions(functions):
     functions_names = []
-    for func in flat([functions]):
-        if not (func.startswith('__') and func.endswith('__')):
+    for func in functions:
+        if is_function_name_valid(func):
             functions_names.append(func)
-
     return functions_names
+
+
+def get_most_common_words(words, top_size=200):
+    return collections.Counter(words).most_common(top_size)
 
 
 def get_top_verbs_in_path(path, top_size=10):
     trees = get_trees(path)
-    functions_names = get_functions_names_from_trees(trees)
+    functions = get_functions_from_trees(trees)
+    functions_names = get_functions_names_from_functions(functions)
+    print('{} functions extracted'.format(len(functions_names)))
+    verbs = []
+    for function_name in functions_names:
+        verbs_from_function = get_verbs_from_function_name(function_name)
+        verbs.extend(verbs_from_function)
+    verbs = get_most_common_words(verbs, top_size)
+    print('{} verbs extracted'.format(len(verbs)))
 
-    print('functions extracted')
-    verbs = flat(
-        [get_verbs_from_function_name(function_name) for function_name in functions_names])
-    return collections.Counter(verbs).most_common(top_size)
+    return verbs
+
+
+def get_top_verbs_from_projects(projects):
+    verbs = []
+    for project in projects:
+        path = os_path.join('.', project)
+        print('--- {} ---'.format(path))
+        verbs.extend(get_top_verbs_in_path(path))
+    return verbs
 
 
 def main():
@@ -104,21 +136,15 @@ def main():
         'requests',
         'sqlalchemy',
     ]
-    words = []
-    for project in projects:
-        path = os_path.join('.', project)
-        words.extend(get_top_verbs_in_path(path))
+    top_verbs = get_top_verbs_from_projects(projects)
 
-    print(
-        'total %s words, %s unique' % (
-            len(words),
-            len(set(words))
-        )
+    print('total {} words, {} unique'.format(
+        len(top_verbs), len(set(top_verbs)))
     )
 
-    top_size = 200
-    for word, occurence in collections.Counter(words).most_common(top_size):
-        print(word, occurence)
+    most_common_words = get_most_common_words(top_verbs)
+
+    [print(*most_common_word) for most_common_word in most_common_words]
 
 
 if __name__ == '__main__':
