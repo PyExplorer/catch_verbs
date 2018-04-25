@@ -91,7 +91,7 @@ def get_functions_from_trees(trees):
     return functions
 
 
-def get_functions_names_from_functions(functions):
+def get_valid_functions_names_from_functions(functions):
     functions_names = []
     for func in functions:
         if is_function_name_valid(func):
@@ -106,7 +106,7 @@ def get_most_common_words(words, top_size=200):
 def get_top_verbs_in_path(path, top_size=10):
     trees = get_trees(path)
     functions = get_functions_from_trees(trees)
-    functions_names = get_functions_names_from_functions(functions)
+    functions_names = get_valid_functions_names_from_functions(functions)
     print('{} functions extracted'.format(len(functions_names)))
     verbs = []
     for function_name in functions_names:
@@ -127,6 +127,11 @@ def get_top_verbs_from_projects(projects):
     return verbs
 
 
+def print_results(results):
+    for result in results:
+        print(*result)
+
+
 def main():
     projects = [
         'django',
@@ -144,7 +149,7 @@ def main():
 
     most_common_words = get_most_common_words(top_verbs)
 
-    [print(*most_common_word) for most_common_word in most_common_words]
+    print_results(most_common_words)
 
 
 if __name__ == '__main__':

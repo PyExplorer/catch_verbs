@@ -1,1 +1,1 @@
--r lesson_1/requirements.txt
+nltk==3.2.5
