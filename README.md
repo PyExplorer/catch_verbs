@@ -1,36 +1,14 @@
-Get top verbs
-==
+#Get top verbs
+
 
 Get top verbs is a static analysis tool for python code that catches verbs 
 from functions name.
 
-Example
---
-From command line:
+##Example
 
-$ pytnon get_top_verbs.py 
+#####From command line:
 
---- . ---
-
-total 7 files
-
-7 trees generated
-
-32 functions extracted
-
-1 verbs extracted
-
-total 1 words, 1 unique
-
-('get', 19) 1
-
-
-From python code:
-
-import get_top_verbs
-
-get_top_verbs.get_top_verbs_in_path('.')
-
+*$ python3 get_top_verbs.py* 
 
 --- . ---
 
@@ -47,32 +25,54 @@ total 1 words, 1 unique
 ('get', 19) 1
 
 
-Installation
---
-With pip:
+#####From python code:
 
-pip install git+https://github.com/PyExplorer/get_top_verbs.git
+*\>>> import get_top_verbs*
 
-Or just clone the project and install the requirements:
+*\>>> get_top_verbs.get_top_verbs_in_path('.')*
 
 
-$ git clone https://github.com/PyExplorer/get_top_verbs.git
+--- . ---
 
-$ cd get_top_verbs
+total 7 files
 
-$ pip install -r requirements.txt
+7 trees generated
+
+32 functions extracted
+
+1 verbs extracted
+
+total 1 words, 1 unique
+
+('get', 19) 1
+
+##Requirements
+
+- at least python 3.5
+ 
+
+##Installation
+
+just clone the project and install the requirements:
 
 
-Docs
---
+*$ git clone https://github.com/PyExplorer/get_top_verbs.git*
+
+*$ cd get_top_verbs*
+
+*$ pip3 install -r requirements.txt*
+
+
+##Docs
+
 to be continue...
 
 
-Contributing
---
+##Contributing
+
 To contribute, pick an issue to work on and leave a comment saying that you've taken the issue. Don't forget to mention when you want to submit the pull request.
 
 
-Launch tests
---
-python -m unittest
+##Launch tests
+
+*$ python3 -m unittest*
