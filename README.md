@@ -1,7 +1,8 @@
-GTV - Get top verbs, please!
+Get top verbs
 
 
-GTV is a static analysis tool for python code that catches verbs from functions name.
+Get top verbs is a static analysis tool for python code that catches verbs 
+from functions name.
 
 Example
 From command line:
