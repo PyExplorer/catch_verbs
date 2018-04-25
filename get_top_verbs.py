@@ -1,9 +1,50 @@
 import ast
 import collections
+import json
+from argparse import ArgumentParser
 from os import path as os_path
 from os import walk as os_walk
 
 from nltk import pos_tag
+
+CONFIG = {
+    'projects': [
+        'django',
+        'flask',
+        'pyramid',
+        'reddit',
+        'requests',
+        'sqlalchemy',
+    ]
+}
+
+
+def parse_args():
+    parser = ArgumentParser(description='Static verb code analyser.')
+    parser.add_argument('-p', '--path', type=str, default='.', dest='path')
+    parser.add_argument('-d', '--dirs', type=str, dest='dirs')
+
+    parser.add_argument("-c", "--config",
+                        default="config.json",
+                        help="Set the path for config.json",
+                        dest='config_path')
+    return parser.parse_args()
+
+
+def merge_two_config(a, b):
+    c = a.copy()
+    c.update(b)
+    return c
+
+
+def get_config_from_file(config_file):
+    try:
+        with open(config_file) as json_data_file:
+            config_from_file = json.load(json_data_file)
+        return config_from_file
+    except ValueError:
+        print("File " + config_file + " is corrupted and can't be parsed")
+        return {}
 
 
 def flat(_list):
@@ -104,6 +145,7 @@ def get_most_common_words(words, top_size=200):
 
 
 def get_top_verbs_in_path(path, top_size=10):
+    print('--- {} ---'.format(path))
     trees = get_trees(path)
     functions = get_functions_from_trees(trees)
     functions_names = get_valid_functions_names_from_functions(functions)
@@ -118,11 +160,10 @@ def get_top_verbs_in_path(path, top_size=10):
     return verbs
 
 
-def get_top_verbs_from_projects(projects):
+def get_top_verbs_from_dirs(dirs):
     verbs = []
-    for project in projects:
-        path = os_path.join('.', project)
-        print('--- {} ---'.format(path))
+    for one_dir in dirs:
+        path = os_path.join('.', one_dir)
         verbs.extend(get_top_verbs_in_path(path))
     return verbs
 
@@ -133,15 +174,16 @@ def print_results(results):
 
 
 def main():
-    projects = [
-        'django',
-        'flask',
-        'pyramid',
-        'reddit',
-        'requests',
-        'sqlalchemy',
-    ]
-    top_verbs = get_top_verbs_from_projects(projects)
+    args = parse_args()
+
+    config_from_file = get_config_from_file(args.config_path)
+
+    merged_config = merge_two_config(CONFIG, config_from_file)
+
+    if not args.dirs:
+        top_verbs = get_top_verbs_in_path(args.path)
+    else:
+        top_verbs = get_top_verbs_from_dirs(merged_config.get('dirs'))
 
     print('total {} words, {} unique'.format(
         len(top_verbs), len(set(top_verbs)))

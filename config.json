@@ -1,0 +1,10 @@
+{
+  "dirs": [
+      "django",
+      "flask",
+      "pyramid",
+      "reddit",
+      "requests",
+      "sqlalchemy"
+  ]
+}
