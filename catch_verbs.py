@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from os import path as os_path
 from os import walk as os_walk
 
-# this part needs only once
+# this part needs only once TODO check if loaded
 from nltk import download
 from nltk import pos_tag
 
