@@ -2,7 +2,7 @@
 
 import unittest
 
-import get_top_verbs
+import catch_verbs
 
 
 class TestDclnt(unittest.TestCase):
@@ -11,19 +11,19 @@ class TestDclnt(unittest.TestCase):
         self.path = './test/django'
 
     def test_flat(self):
-        self.assertEqual(get_top_verbs.flat([(1, 2), (3, 4)]), [1, 2, 3, 4])
+        self.assertEqual(catch_verbs.flat([(1, 2), (3, 4)]), [1, 2, 3, 4])
 
     def test_check_is_verb_with_ntlk(self):
-        self.assertEqual(get_top_verbs.check_is_verb_with_ntlk('get'), True)
-        self.assertEqual(get_top_verbs.check_is_verb_with_ntlk('set'), False)
+        self.assertEqual(catch_verbs.check_is_verb_with_ntlk('get'), True)
+        self.assertEqual(catch_verbs.check_is_verb_with_ntlk('set'), False)
 
     def test_is_function_name_valid(self):
-        self.assertEqual(get_top_verbs.is_function_name_valid('get'), True)
-        self.assertEqual(get_top_verbs.is_function_name_valid('__main__'), False)
+        self.assertEqual(catch_verbs.is_function_name_valid('get'), True)
+        self.assertEqual(catch_verbs.is_function_name_valid('__main__'), False)
 
     def test_get_filenames_with_ext_in_path(self):
         self.assertEqual(
-            get_top_verbs.get_filenames_with_ext_in_path(self.path),
+            catch_verbs.get_filenames_with_ext_in_path(self.path),
             [
                 './test/django/file_1.py',
                 './test/django/file_2.py',
@@ -35,41 +35,41 @@ class TestDclnt(unittest.TestCase):
 
     def test_get_filenames_with_ext_in_path_with_bad_path(self):
         self.assertEqual(
-            get_top_verbs.get_filenames_with_ext_in_path('-'), []
+            catch_verbs.get_filenames_with_ext_in_path('-'), []
         )
 
     def test_get_trees(self):
-        self.assertEqual(len(get_top_verbs.get_trees(self.path)), 5)
+        self.assertEqual(len(catch_verbs.get_trees(self.path)), 5)
         self.assertEqual(
             all([
-                isinstance(t, get_top_verbs.ast.Module) for t in
-                get_top_verbs.get_trees(self.path)
+                isinstance(t, catch_verbs.ast.Module) for t in
+                catch_verbs.get_trees(self.path)
             ]),
             True
         )
 
     def test_get_trees_with_bad_path(self):
-        self.assertEqual(len(get_top_verbs.get_trees('-')), 0)
+        self.assertEqual(len(catch_verbs.get_trees('-')), 0)
 
     def test_get_verbs_from_function_name(self):
-        self.assertEqual(get_top_verbs.get_verbs_from_function_name('main'), [])
+        self.assertEqual(catch_verbs.get_verbs_from_function_name('main'), [])
         self.assertEqual(
-            get_top_verbs.get_verbs_from_function_name('do_something'), ['do']
+            catch_verbs.get_verbs_from_function_name('do_something'), ['do']
         )
         self.assertEqual(
-            get_top_verbs.get_verbs_from_function_name('get_something'), ['get']
+            catch_verbs.get_verbs_from_function_name('get_something'), ['get']
         )
 
     def test_get_functions_from_trees(self):
-        trees = get_top_verbs.get_trees(self.path)
+        trees = catch_verbs.get_trees(self.path)
         self.assertEqual(
-            get_top_verbs.get_functions_from_trees(trees),
+            catch_verbs.get_functions_from_trees(trees),
             ['main', 'get_something', 'do_something']
         )
 
     def test_get_functions_names_from_functions(self):
         self.assertEqual(
-            get_top_verbs.get_valid_functions_names_from_functions(
+            catch_verbs.get_valid_functions_names_from_functions(
                 ['get_something', '__main__']
             ),
             ['get_something']
@@ -80,7 +80,7 @@ class TestDclnt(unittest.TestCase):
 
     def test_get_top_verbs_in_path(self):
         self.assertCountEqual(
-            get_top_verbs.get_top_verbs_in_path(self.path),
+            catch_verbs.get_top_verbs_in_path(self.path),
             [('get', 1), ('do', 1)]
         )
 
@@ -90,7 +90,7 @@ class TestDclnt(unittest.TestCase):
             'test/flask'
         ]
         self.assertCountEqual(
-            get_top_verbs.get_top_verbs_from_dirs(dirs),
+            catch_verbs.get_top_verbs_from_dirs(dirs),
             [('get', 1), ('do', 1)]
         )
 

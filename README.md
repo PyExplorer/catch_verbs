@@ -1,14 +1,13 @@
-#Get top verbs
+#Catch verbs
 
-
-Get top verbs is a static analysis tool for python code that catches verbs 
+Catch verbs is a static analysis tool for python code that catches verbs 
 from functions name.
 
 ##Example
 
 #####From command line:
 
-*$ python3 get_top_verbs.py* 
+*$ python3 catch_verbs.py* 
 
 --- . ---
 
@@ -27,9 +26,9 @@ total 1 words, 1 unique
 
 #####From python code:
 
-*\>>> import get_top_verbs*
+*\>>> import catch_verbs*
 
-*\>>> get_top_verbs.get_top_verbs_in_path('.')*
+*\>>> catch_verbs.get_top_verbs_in_path('.')*
 
 
 --- . ---
@@ -56,16 +55,36 @@ total 1 words, 1 unique
 just clone the project and install the requirements:
 
 
-*$ git clone https://github.com/PyExplorer/get_top_verbs.git*
+*$ git clone https://github.com/PyExplorer/catch_verbs.git*
 
-*$ cd get_top_verbs*
+*$ cd catch_verbs*
 
 *$ pip3 install -r requirements.txt*
 
 
 ##Docs
 
-to be continue...
+The script has 3 option to run:
+
+**-p (--path)** - path for searching *.py files (includung all subdirectories) 
+
+**default:** '.' 
+
+**example:** *$ python3 catch_verbs.py -p './my_path'*
+
+**-d (--dirs)** - turn on filter by directories for searching from current path
+
+It can be filled in config.json
+  
+**default:** 'django', 'flask', 'pyramid', 'reddit', 'requests', 'sqlalchemy'
+
+**example:** *$ python3 catch_verbs.py -p './my_path' -d*
+
+**-c (--config)** - Set the name and path for config
+
+**default:** 'config.json' 
+
+**example:** *$ python3 catch_verbs.py -c './mydir/config.txt'*
 
 
 ##Contributing
