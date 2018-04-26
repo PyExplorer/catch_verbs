@@ -1,11 +1,11 @@
-#Catch verbs
+#Catch verbs#
 
 Catch verbs is a static analysis tool for python code that catches verbs 
 from functions name.
 
-##Example
+##Example##
 
-#####From command line:
+#####From command line:####
 
 *$ python3 catch_verbs.py* 
 
@@ -24,7 +24,7 @@ total 1 words, 1 unique
 ('get', 19) 1
 
 
-#####From python code:
+#####From python code:####
 
 *\>>> import catch_verbs*
 
@@ -45,12 +45,12 @@ total 1 words, 1 unique
 
 ('get', 19) 1
 
-##Requirements
+##Requirements##
 
 - at least python 3.5
  
 
-##Installation
+##Installation##
 
 just clone the project and install the requirements:
 
@@ -62,7 +62,7 @@ just clone the project and install the requirements:
 *$ pip3 install -r requirements.txt*
 
 
-##Docs
+##Docs##
 
 The script has 3 option to run:
 
@@ -87,11 +87,11 @@ It can be filled in config.json
 **example:** *$ python3 catch_verbs.py -c './mydir/config.txt'*
 
 
-##Contributing
+##Contributing##
 
 To contribute, pick an issue to work on and leave a comment saying that you've taken the issue. Don't forget to mention when you want to submit the pull request.
 
 
-##Launch tests
+##Launch tests##
 
 *$ python3 -m unittest*
