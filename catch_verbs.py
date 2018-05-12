@@ -101,7 +101,6 @@ def get_trees(filenames):
         if not tree:
             continue
         trees.append(tree)
-
     print('{} trees generated'.format(len(trees)))
     return trees
 
@@ -137,7 +136,7 @@ def get_most_common_words(words, top_size=200):
     return collections.Counter(words).most_common(top_size)
 
 
-def get_top_verbs_in_path(path, top_size=10):
+def get_verbs_in_path(path):
     print('--- {} ---'.format(path))
     filenames = get_filenames_with_ext_in_path(path)
     trees = get_trees(filenames)
@@ -148,17 +147,16 @@ def get_top_verbs_in_path(path, top_size=10):
     for function_name in functions_names:
         verbs_from_function = get_verbs_from_function_name(function_name)
         verbs.extend(verbs_from_function)
-    verbs = get_most_common_words(verbs, top_size)
     print('{} verbs extracted'.format(len(verbs)))
 
     return verbs
 
 
-def get_top_verbs_from_dirs(dirs):
+def get_verbs_from_dirs(dirs):
     verbs = []
     for one_dir in dirs:
         path = os_path.join('.', one_dir)
-        verbs.extend(get_top_verbs_in_path(path))
+        verbs.extend(get_verbs_in_path(path))
     return verbs
 
 
@@ -175,15 +173,15 @@ def main():
     merged_config = merge_two_config(CONFIG, config_from_file)
 
     if not args.dirs:
-        top_verbs = get_top_verbs_in_path(args.path)
+        verbs = get_verbs_in_path(args.path)
     else:
-        top_verbs = get_top_verbs_from_dirs(merged_config.get('dirs'))
+        verbs = get_verbs_from_dirs(merged_config.get('dirs'))
 
     print('total {} words, {} unique'.format(
-        len(top_verbs), len(set(top_verbs)))
+        len(verbs), len(set(verbs)))
     )
 
-    most_common_words = get_most_common_words(top_verbs)
+    most_common_words = get_most_common_words(verbs)
 
     print_results(most_common_words)
 
