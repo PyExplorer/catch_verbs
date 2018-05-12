@@ -7,7 +7,7 @@ from os import walk as os_walk
 
 from nltk import pos_tag
 
-CONFIG = {
+DEFAULT_CONFIG = {
     'projects': [
         'django',
         'flask',
@@ -167,7 +167,7 @@ def main():
 
     config_from_file = get_config_from_file(args.config_path)
 
-    merged_config = merge_two_config(CONFIG, config_from_file)
+    merged_config = merge_two_config(DEFAULT_CONFIG, config_from_file)
 
     if not args.dirs:
         verbs = get_verbs_in_path(args.path)
