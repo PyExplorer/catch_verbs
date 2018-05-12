@@ -9,43 +9,36 @@ Example
 
 **From command line:**
 
-*$ python3 catch_verbs.py* 
+```
+$ python3 catch_verbs.py 
+```
 
+```
 --- . ---
-
 total 7 files
-
 7 trees generated
-
 32 functions extracted
-
 1 verbs extracted
-
 total 1 words, 1 unique
-
 ('get', 19) 1
-
+```
 
 **From python code:**
 
-*\>>> import catch_verbs*
+```
+>>> import catch_verbs
+>>> catch_verbs.get_top_verbs_in_path('.')
+```
 
-*\>>> catch_verbs.get_top_verbs_in_path('.')*
-
-
+```
 --- . ---
-
 total 7 files
-
 7 trees generated
-
 32 functions extracted
-
 1 verbs extracted
-
 total 1 words, 1 unique
-
 ('get', 19) 1
+```
 
 Requirements
 --
@@ -58,24 +51,25 @@ Installation
 
 just clone the project and install the requirements:
 
-
-*$ git clone https://github.com/PyExplorer/catch_verbs.git*
-
-*$ cd catch_verbs*
-
-*$ pip3 install -r requirements.txt*
-
+```
+$ git clone https://github.com/PyExplorer/catch_verbs.git
+$ cd catch_verbs
+$ pip3 install -r requirements.txt
+```
 
 Docs
 --
 
 The script has 3 option to run:
 
+
 **-p (--path)** - path for searching *.py files (includung all subdirectories) 
 
 **default:** '.' 
 
-*example:* *$ python3 catch_verbs.py -p './my_path'*
+```
+example: $ python3 catch_verbs.py -p './my_path'
+```
 
 **-d (--dirs)** - turn on filter by directories for searching from current path
 
@@ -83,14 +77,17 @@ It can be filled in config.json
   
 **default:** 'django', 'flask', 'pyramid', 'reddit', 'requests', 'sqlalchemy'
 
-*example:* *$ python3 catch_verbs.py -p './my_path' -d*
+```
+example: $ python3 catch_verbs.py -p './my_path' -d
+```
 
 **-c (--config)** - Set the name and path for config
 
 **default:** 'config.json' 
 
-*example:* *$ python3 catch_verbs.py -c './mydir/config.txt'*
-
+```
+example: $ python3 catch_verbs.py -c './mydir/config.txt'
+```
 
 Contributing
 --
