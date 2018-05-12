@@ -65,28 +65,28 @@ The script has 3 option to run:
 
 **-p (--path)** - path for searching *.py files (includung all subdirectories) 
 
-**default:** '.' 
+*default:* '.' 
 
 ```
-example: $ python3 catch_verbs.py -p './my_path'
+$ python3 catch_verbs.py -p './my_path'
 ```
 
 **-d (--dirs)** - turn on filter by directories for searching from current path
 
 It can be filled in config.json
   
-**default:** 'django', 'flask', 'pyramid', 'reddit', 'requests', 'sqlalchemy'
+*default:* 'django', 'flask', 'pyramid', 'reddit', 'requests', 'sqlalchemy'
 
 ```
-example: $ python3 catch_verbs.py -p './my_path' -d
+$ python3 catch_verbs.py -p './my_path' -d
 ```
 
 **-c (--config)** - Set the name and path for config
 
-**default:** 'config.json' 
+*default:* 'config.json' 
 
 ```
-example: $ python3 catch_verbs.py -c './mydir/config.txt'
+$ python3 catch_verbs.py -c './mydir/config.txt'
 ```
 
 Contributing
