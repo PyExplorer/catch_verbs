@@ -8,6 +8,16 @@ class TestDclnt(unittest.TestCase):
 
     def setUp(self):
         self.path = './test/django'
+        self.tree_template = """
+def main():
+    pass
+def get_something(param):
+    pass
+def do_something(param):
+    pass
+if __name__ == 'main':
+    main()
+"""
 
     def test_flat(self):
         self.assertEqual(catch_verbs.flat([(1, 2), (3, 4)]), [1, 2, 3, 4])
@@ -45,18 +55,17 @@ class TestDclnt(unittest.TestCase):
             catch_verbs.get_filenames_with_ext_in_path('-'), []
         )
 
-    def test_get_trees(self):
-        self.assertEqual(len(catch_verbs.get_trees(self.path)), 5)
-        self.assertEqual(
-            all([
-                isinstance(t, catch_verbs.ast.Module) for t in
-                catch_verbs.get_trees(self.path)
-            ]),
-            True
-        )
+    @mock.patch('catch_verbs.get_tree')
+    def test_get_trees(self, mocked_get_tree):
+        mocked_get_tree.return_value = [
+            catch_verbs.ast.parse(self.tree_template)
+        ]
+        self.assertEqual(len(catch_verbs.get_trees([
+            '1.py', '2.py', '3.py'
+        ])), 3)
 
     def test_get_trees_with_bad_path(self):
-        self.assertEqual(len(catch_verbs.get_trees('-')), 0)
+        self.assertEqual(len(catch_verbs.get_trees([])), 0)
 
     def test_get_verbs_from_function_name(self):
         self.assertEqual(catch_verbs.get_verbs_from_function_name('main'), [])
@@ -67,8 +76,12 @@ class TestDclnt(unittest.TestCase):
             catch_verbs.get_verbs_from_function_name('get_something'), ['get']
         )
 
-    def test_get_functions_from_trees(self):
-        trees = catch_verbs.get_trees(self.path)
+    @mock.patch('catch_verbs.get_trees')
+    def test_get_functions_from_trees(self, mocked_get_trees):
+        mocked_get_trees.return_value = [
+            catch_verbs.ast.parse(self.tree_template)
+        ]
+        trees = catch_verbs.get_trees([])
         self.assertEqual(
             catch_verbs.get_functions_from_trees(trees),
             ['main', 'get_something', 'do_something']
@@ -85,20 +98,26 @@ class TestDclnt(unittest.TestCase):
     def test_most_common_words(self):
         pass
 
-    def test_get_top_verbs_in_path(self):
-        self.assertCountEqual(
-            catch_verbs.get_top_verbs_in_path(self.path),
-            [('get', 1), ('do', 1)]
-        )
-
-    def test_get_top_verbs_from_dirs(self):
-        dirs = [
-            'test/django',
-            'test/flask'
+    @mock.patch('catch_verbs.get_valid_functions_names_from_functions')
+    def test_get_top_verbs_in_path(
+            self,
+            mocked_get_valid_functions_names_from_functions
+    ):
+        mocked_get_valid_functions_names_from_functions.return_value = [
+            'get_something', 'do_something'
         ]
         self.assertCountEqual(
-            catch_verbs.get_top_verbs_from_dirs(dirs),
-            [('get', 1), ('do', 1)]
+            catch_verbs.get_verbs_in_path(self.path),
+            ['get', 'do']
+        )
+
+    @mock.patch('catch_verbs.get_verbs_in_path')
+    def test_get_top_verbs_from_dirs(self, mocked_get_verbs_in_path):
+        mocked_get_verbs_in_path.return_value = ['get', 'do']
+        dirs = ['1', '2']
+        self.assertCountEqual(
+            catch_verbs.get_verbs_from_dirs(dirs),
+            ['get', 'get', 'do', 'do']
         )
 
 
