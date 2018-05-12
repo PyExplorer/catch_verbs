@@ -55,11 +55,13 @@ def flat(_list):
     return res
 
 
-def check_is_verb_with_ntlk(word):
+def check_is_verb_with_ntlk(word, function_name):
     if not word:
         return False
-    pos_info = pos_tag([word])
-    return pos_info[0][1] == 'VB'
+    checked_name = ['we']
+    checked_name.extend(function_name)
+    pos_info = pos_tag(checked_name)
+    return 'VB' in pos_info[checked_name.index(word)][1]
 
 
 def is_function_name_valid(func):
@@ -104,8 +106,9 @@ def get_trees(filenames):
 
 def get_verbs_from_function_name(function_name):
     verbs = []
-    for word in function_name.split('_'):
-        if not check_is_verb_with_ntlk(word):
+    function_name_in_list = function_name.split('_')
+    for word in function_name_in_list:
+        if not check_is_verb_with_ntlk(word, function_name_in_list):
             continue
         verbs.append(word)
     return verbs

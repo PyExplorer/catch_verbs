@@ -15,13 +15,20 @@ $ python3 catch_verbs.py
 
 ```
 --- . ---
-total 7 files
-7 trees generated
-34 functions extracted
-21 verbs extracted
-total 21 words, 2 unique
-get 20
-do 1
+total 2 files
+2 trees generated
+31 functions extracted
+42 verbs extracted
+total 42 words, 9 unique
+get 19
+test 13
+is 4
+setup 1
+print 1
+flat 1
+merge 1
+parse 1
+check 1
 ```
 
 **From python code:**
@@ -32,13 +39,20 @@ do 1
 ```
 
 ```
-total 7 files
-7 trees generated
-34 functions extracted
-21 verbs extracted
-total 21 words, 2 unique
-get 20
-do 1
+total 2 files
+2 trees generated
+31 functions extracted
+42 verbs extracted
+total 42 words, 9 unique
+get 19
+test 13
+is 4
+setup 1
+print 1
+flat 1
+merge 1
+parse 1
+check 1
 ```
 
 Requirements
