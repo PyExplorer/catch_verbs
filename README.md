@@ -17,10 +17,11 @@ $ python3 catch_verbs.py
 --- . ---
 total 7 files
 7 trees generated
-32 functions extracted
-1 verbs extracted
-total 1 words, 1 unique
-('get', 19) 1
+34 functions extracted
+21 verbs extracted
+total 21 words, 2 unique
+get 20
+do 1
 ```
 
 **From python code:**
@@ -31,13 +32,13 @@ total 1 words, 1 unique
 ```
 
 ```
---- . ---
 total 7 files
 7 trees generated
-32 functions extracted
-1 verbs extracted
-total 1 words, 1 unique
-('get', 19) 1
+34 functions extracted
+21 verbs extracted
+total 21 words, 2 unique
+get 20
+do 1
 ```
 
 Requirements
