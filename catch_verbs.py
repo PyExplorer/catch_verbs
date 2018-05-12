@@ -70,15 +70,13 @@ def is_function_name_valid(func):
     return not (func.startswith('__') and func.endswith('__'))
 
 
-def get_filenames_with_ext_in_path(path, ext='.py', max_size=100):
+def get_filenames_with_ext_in_path(path, ext='.py'):
     filenames = []
     for dirname, dirs, files in os_walk(path, topdown=True):
         for file in files:
             if not file.endswith(ext):
                 continue
             filenames.append(os_path.join(dirname, file))
-            if len(filenames) == max_size:
-                break
 
     print('total {} files'.format(len(filenames)))
     return filenames
