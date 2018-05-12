@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import catch_verbs
 
@@ -19,7 +20,13 @@ class TestDclnt(unittest.TestCase):
         self.assertEqual(catch_verbs.is_function_name_valid('get'), True)
         self.assertEqual(catch_verbs.is_function_name_valid('__main__'), False)
 
-    def test_get_filenames_with_ext_in_path(self):
+    @mock.patch('catch_verbs.os_walk')
+    def test_get_filenames_with_ext_in_path(self, mocked_os_walk):
+        mocked_os_walk.return_value = [
+            ['./test/django', ['dir_2', 'dir_1'], ['file_1.py', 'file_2.py']],
+            ['./test/django/dir_2', [], ['file_5.py', 'file_4.py']],
+            ['./test/django/dir_1', [], ['file_3.py']]
+        ]
         self.assertEqual(
             catch_verbs.get_filenames_with_ext_in_path(self.path),
             [
@@ -31,7 +38,9 @@ class TestDclnt(unittest.TestCase):
             ]
         )
 
-    def test_get_filenames_with_ext_in_path_with_bad_path(self):
+    @mock.patch('catch_verbs.os_walk')
+    def test_get_filenames_with_ext_in_path_with_bad_path(self, mocked_os_walk):
+        mocked_os_walk.return_value = []
         self.assertEqual(
             catch_verbs.get_filenames_with_ext_in_path('-'), []
         )
