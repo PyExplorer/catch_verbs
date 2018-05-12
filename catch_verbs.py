@@ -5,7 +5,6 @@ from argparse import ArgumentParser
 from os import path as os_path
 from os import walk as os_walk
 
-# this part needs only once TODO check if loaded
 from nltk import download
 from nltk import pos_tag
 
@@ -82,34 +81,26 @@ def get_filenames_with_ext_in_path(path, ext='.py'):
     return filenames
 
 
-def get_trees(path, with_filenames=False, with_file_content=False):
-    filenames = get_filenames_with_ext_in_path(path)
+def get_tree(filename):
+    tree = None
+    with open(filename, 'r', encoding='utf-8') as opened_file:
+        main_file_content = opened_file.read()
+    try:
+        tree = ast.parse(main_file_content)
+    except SyntaxError as e:
+        print(e)
+    except Exception as e:
+        print('Something went wrong %s' % (e,))
+    return tree
 
+
+def get_trees(filenames):
     trees = []
     for filename in filenames:
-        with open(filename, 'r', encoding='utf-8') as opened_file:
-            main_file_content = opened_file.read()
-        try:
-            tree = ast.parse(main_file_content)
-        except SyntaxError as e:
-            print(e)
-            tree = None
-        except Exception as e:
-            print('Something went wrong %s' % (e,))
-            tree = None
-
+        tree = get_tree(filename)
         if not tree:
             continue
-
-        if not with_filenames:
-            trees.append(tree)
-            continue
-
-        if with_file_content:
-            trees.append((filename, main_file_content, tree))
-            continue
-
-        trees.append((filename, tree))
+        trees.append(tree)
 
     print('{} trees generated'.format(len(trees)))
     return trees
@@ -148,7 +139,8 @@ def get_most_common_words(words, top_size=200):
 
 def get_top_verbs_in_path(path, top_size=10):
     print('--- {} ---'.format(path))
-    trees = get_trees(path)
+    filenames = get_filenames_with_ext_in_path(path)
+    trees = get_trees(filenames)
     functions = get_functions_from_trees(trees)
     functions_names = get_valid_functions_names_from_functions(functions)
     print('{} functions extracted'.format(len(functions_names)))
