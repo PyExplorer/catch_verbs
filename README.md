@@ -45,6 +45,7 @@ Requirements
 --
 
 - at least python 3.5
+- nltk=>3.2.5
  
 
 Installation
@@ -56,6 +57,7 @@ just clone the project and install the requirements:
 $ git clone https://github.com/PyExplorer/catch_verbs.git
 $ cd catch_verbs
 $ pip3 install -r requirements.txt
+$ python -m nltk.downloader averaged_perceptron_tagger
 ```
 
 Docs
