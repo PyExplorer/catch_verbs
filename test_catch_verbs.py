@@ -23,8 +23,15 @@ if __name__ == 'main':
         self.assertEqual(catch_verbs.flat([(1, 2), (3, 4)]), [1, 2, 3, 4])
 
     def test_check_is_verb_with_ntlk(self):
-        self.assertEqual(catch_verbs.check_is_verb_with_ntlk('get'), True)
-        self.assertEqual(catch_verbs.check_is_verb_with_ntlk('set'), False)
+        self.assertEqual(
+            catch_verbs.check_is_verb_with_ntlk('get', ['get', 'filenames']),
+            True)
+        self.assertEqual(
+            catch_verbs.check_is_verb_with_ntlk('set', ['set', 'filenames']),
+            True)
+        self.assertEqual(
+            catch_verbs.check_is_verb_with_ntlk('set', ['create', 'a', 'set']),
+            False)
 
     def test_is_function_name_valid(self):
         self.assertEqual(catch_verbs.is_function_name_valid('get'), True)
