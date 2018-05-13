@@ -106,6 +106,14 @@ $ python3 catch_verbs.py -p './my_path' -d
 $ python3 catch_verbs.py -c './mydir/config.txt'
 ```
 
+**-l (--log)** - Set the name and path for log file
+
+*default:* '' - to stdout 
+
+```
+$ python3 catch_verbs.py -l './log.txt'
+```
+
 Contributing
 --
 
