@@ -56,7 +56,9 @@ if __name__ == 'main':
         )
 
     @mock.patch('catch_verbs.os_walk')
-    def test_get_filenames_with_ext_in_path_with_bad_path(self, mocked_os_walk):
+    def test_get_filenames_with_ext_in_path_with_bad_path(
+            self, mocked_os_walk
+    ):
         mocked_os_walk.return_value = []
         self.assertEqual(
             catch_verbs.get_filenames_with_ext_in_path('-'), []

@@ -1,6 +1,7 @@
 import ast
 import collections
 import json
+import logging
 from argparse import ArgumentParser
 from os import path as os_path
 from os import walk as os_walk
@@ -8,7 +9,7 @@ from os import walk as os_walk
 from nltk import pos_tag
 
 DEFAULT_CONFIG = {
-    'projects': [
+    'dirs': [
         'django',
         'flask',
         'pyramid',
@@ -23,11 +24,11 @@ def parse_args():
     parser = ArgumentParser(description='Static verb code analyser.')
     parser.add_argument('-p', '--path', type=str, default='.', dest='path')
     parser.add_argument('-d', '--dirs', type=str, dest='dirs')
-
     parser.add_argument("-c", "--config",
                         default="config.json",
                         help="Set the path for config.json",
                         dest='config_path')
+    parser.add_argument('-l', '--log', type=str, dest='log', default='')
     return parser.parse_args()
 
 
@@ -43,7 +44,9 @@ def get_config_from_file(config_file):
             config_from_file = json.load(json_data_file)
         return config_from_file
     except ValueError:
-        print("File " + config_file + " is corrupted and can't be parsed")
+        logging.error(
+            "File " + config_file + " is corrupted and can't be parsed"
+        )
         return {}
 
 
@@ -76,7 +79,7 @@ def get_filenames_with_ext_in_path(path, ext='.py'):
                 continue
             filenames.append(os_path.join(dirname, file))
 
-    print('total {} files'.format(len(filenames)))
+    logging.info('total {} files'.format(len(filenames)))
     return filenames
 
 
@@ -87,9 +90,9 @@ def get_tree(filename):
     try:
         tree = ast.parse(main_file_content)
     except SyntaxError as e:
-        print(e)
+        logging.error(e)
     except Exception as e:
-        print('Something went wrong %s' % (e,))
+        logging.error('Something went wrong %s' % (e,))
     return tree
 
 
@@ -100,7 +103,7 @@ def get_trees(filenames):
         if not tree:
             continue
         trees.append(tree)
-    print('{} trees generated'.format(len(trees)))
+    logging.info('{} trees generated'.format(len(trees)))
     return trees
 
 
@@ -137,17 +140,17 @@ def get_most_common_words(words, top_size=200):
 
 
 def get_verbs_in_path(path):
-    print('--- {} ---'.format(path))
+    logging.info('--- {} ---'.format(path))
     filenames = get_filenames_with_ext_in_path(path)
     trees = get_trees(filenames)
     functions = get_functions_from_trees(trees)
     functions_names = get_valid_functions_names_from_functions(functions)
-    print('{} functions extracted'.format(len(functions_names)))
+    logging.info('{} functions extracted'.format(len(functions_names)))
     verbs = []
     for function_name in functions_names:
         verbs_from_function = get_verbs_from_function_name(function_name)
         verbs.extend(verbs_from_function)
-    print('{} verbs extracted'.format(len(verbs)))
+    logging.info('{} verbs extracted'.format(len(verbs)))
 
     return verbs
 
@@ -162,22 +165,23 @@ def get_verbs_from_dirs(dirs):
 
 def print_results(results):
     for result in results:
-        print(*result)
+        logging.info("{} {}".format(*result))
 
 
 def main():
     args = parse_args()
-
     config_from_file = get_config_from_file(args.config_path)
-
     merged_config = merge_two_config(DEFAULT_CONFIG, config_from_file)
+
+    logging.basicConfig(filename=args.log, level=logging.INFO,
+                        format='%(message)s')
 
     if not args.dirs:
         verbs = get_verbs_in_path(args.path)
     else:
         verbs = get_verbs_from_dirs(merged_config.get('dirs'))
 
-    print('total {} words, {} unique'.format(
+    logging.info('total {} words, {} unique'.format(
         len(verbs), len(set(verbs)))
     )
 
